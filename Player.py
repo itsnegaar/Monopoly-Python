@@ -129,8 +129,9 @@ class Player:
     def land_on_property(self, landed_property: Property):
         print("You landed on {}.".format(landed_property.name))
         if landed_property.owner:
-            print("Sorry, this property is owned by Agent. Paying rent...")
-            self.pay_rent(landed_property.rent)
+            if landed_property.owner is not self:
+                print("Sorry, this property is owned by Agent. Paying rent...")
+                self.pay_rent(rent=landed_property.rent, owner=landed_property.owner)
         else:
             print("This property doesn't belong to anybody. Choose action:\n"
                   "1. Buy the property...\n"
@@ -139,11 +140,9 @@ class Player:
                 input_choice = input()
                 if input_choice == '1':
                     self.buy_property(landed_property)
-                    # todo : buy
                 elif input_choice == '2':
                     break
                 else:
                     print("Wrong output. Try Again: \n"
                           "1. Buy the property..."
                           "2. Go to next action...")
-

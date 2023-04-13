@@ -20,6 +20,17 @@ class PropertyColorEnum:
     PINK = "PINK"
     LIME = "LIME"
     PURPLE = "PURPLE"
+
+
+class CountryTypeEnum:
+    IRAN = "IRAN"
+    BRAZIL = "BRAZIL"
+    ITALY = "ITALY"
+    RUSSIA = "RUSSIA"
+    AMERICA = "AMERICA"
+    ENGLAND = "ENGLAND"
+    GERMANY = "GERMANY"
+    FRANCE = "FRANCE"
 #
 # class TaxTypeEnum:
 #     SUPER_TAX = "SUPER_TAX"

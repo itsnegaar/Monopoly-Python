@@ -76,7 +76,7 @@ class Monopoly:
                     elif self.board[self.player_1.position].property_type == PropertyTypeEnum.LANDMARK:
                         self.player_1.land_on_property(self.board[self.player_1.position])
                     elif self.board[self.player_1.position].property_type == PropertyTypeEnum.PARKING:
-                        pass
+                        self.land_on_parking
 
                     if Utils.check_double_dice(rolled_dice):
                         self.player_1.set_doubled_dice_times(self.player_1.doubled_dice_times + 1)

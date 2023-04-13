@@ -13,7 +13,7 @@ class Property:
         self.buildings_count = 0
         self.house_price = 0
         self.owner: (Player, None) = None
-        self.property_color = property_color
+        self.country: CountryTypeEnum
 
     def is_owned(self):
         if self.owner:

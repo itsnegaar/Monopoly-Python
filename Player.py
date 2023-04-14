@@ -125,14 +125,14 @@ class Player:
                     self.print_owned_properties()
 
                     while True:
-                        property_chosen = input("Enter a property number to select: or 0 to pass")
+                        property_chosen = input("Enter a property number to select: or 0 to pass: ")
                         if property_chosen == '0':
                             break
                         else:
                             try:
                                 self.work_with_a_property(int(property_chosen))
                             except Exception as e:
-                                print("Input Error!")
+                                print("Input Error!", e)
 
                 else:
                     print("No properties yet...")
@@ -156,7 +156,7 @@ class Player:
         if working_property.buildings_count > 0:
             options.append("2.Downgrade")
             options_numbers.append("2")
-        elif working_property.is_upgradable:
+        elif not working_property.is_upgradable:
             flag = True
             for _property in self.owned_property_list:
                 if _property.country == working_property.country:
@@ -169,7 +169,7 @@ class Player:
 
             # options.append("3.Mortgage")
             # options_numbers.append("3")
-        print("Selected Property:\n" + working_property)
+        print("Selected Property:\n" + str(working_property))
         print("Options: \n")
         for option in options:
             print(option)
@@ -178,6 +178,7 @@ class Player:
             if action == '0':
                 print("Exiting...\n")
                 time.sleep(1)
+                break
             elif action not in options_numbers:
                 print("Wrong Input! Try again.")
                 continue
@@ -218,8 +219,8 @@ class Player:
             return True
 
     def sell_property(self, input_property: Property):
-        if input_property.buildings_count <= 0:
-            print("You can't sell a property with less than 1 building!")
+        if input_property.buildings_count > 0:
+            print("You can't sell a property with more than 1 building!")
             return False
         else:
             sell_price = input_property.price

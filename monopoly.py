@@ -1,4 +1,5 @@
 import random
+import time
 
 import Utils
 from Enums import PropertyTypeEnum
@@ -48,6 +49,7 @@ class Monopoly:
                 player_now = self.player_2
 
             print("It's {} Turn.\n".format(player_now.name))
+            time.sleep(0.5)
             # Are you in Prison?!
             if self.player_1.prison_time > 0:
                 ConsoleLog.print_in_prison()
@@ -63,7 +65,6 @@ class Monopoly:
                         player_now.get_out_of_jail()
                     else:
                         player_now.prison_time += 1
-            # Guess not in prison
             # todo: make doubles zero when gone to jail
             else:
                 if not player_now.is_visiting:

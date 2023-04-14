@@ -49,9 +49,6 @@ class Property:
     def sell(self):
         self.owner = None
 
-    # def mortgage_building(self):
-    #     pass
-
     def __repr__(self):
         output = str(self.cell_number) + " | " + self.name + " | number of buildings:" + str(
             self.buildings_count) + " | price: $" + str(self.price) + " | rent: $" + str(

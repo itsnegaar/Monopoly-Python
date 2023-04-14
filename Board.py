@@ -14,7 +14,7 @@ class Board:
                  country=CountryTypeEnum.BRAZIL, price=200, rent=8),
 
         Property(cell_number=5, name="Income Tax", property_type=PropertyTypeEnum.INCOME_TAX),
-        Property(cell_number=6, name="Kings Cross Station", property_type=PropertyTypeEnum.STATION, price=200, rent=8),
+        Property(cell_number=6, name="Rio Airport", property_type=PropertyTypeEnum.AIRPORT, price=200, rent=8),
 
         Property(cell_number=7, name="Amol", property_type=PropertyTypeEnum.LANDMARK, country=CountryTypeEnum.IRAN,
                  price=200, rent=8),

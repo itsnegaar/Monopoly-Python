@@ -1,4 +1,4 @@
-from Enums import PropertyTypeEnum, PropertyColorEnum, CountryTypeEnum
+from Enums import PropertyTypeEnum, CountryTypeEnum
 
 
 class Property:
@@ -35,6 +35,12 @@ class Property:
             return self.house_price / 2
         else:
             return -1
+
+    def upgrade_buildings(self):
+        pass
+
+    def mortgage_building(self):
+        pass
 
     def __repr__(self):
         output = str(self.cell_number) + " | " + self.name + " | number of buildings:" + str(

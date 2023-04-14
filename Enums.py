@@ -4,23 +4,11 @@ class PropertyTypeEnum:
     INCOME_TAX = "INCOME_TAX"
     SUPER_TAX = "SUPER_TAX"
     JAIL = "JAIL"
-    PARKING = "PARKING"
-    COMPANY = "COMPANY"
-    STATION = "STATION"
+    # todo : change station to airport
+    AIRPORT = "AIRPORT"
     LANDMARK = "LANDMARK"
     GO_TO_JAIL = "GO_TO_JAIL"
     JUST_VISITING = "JUST_VISITING"
-
-
-class PropertyColorEnum:
-    RED = "RED"
-    BLUE = "BLUE"
-    GREEN = "GREEN"
-    YELLOW = "YELLOW"
-    ORANGE = "ORANGE"
-    PINK = "PINK"
-    LIME = "LIME"
-    PURPLE = "PURPLE"
 
 
 class CountryTypeEnum:

@@ -13,7 +13,7 @@ class Board:
         Property(cell_number=4, name="Salvador", property_type=PropertyTypeEnum.LANDMARK,
                  country=CountryTypeEnum.BRAZIL, price=40, rent=6),
         Property(cell_number=5, name="Income Tax", property_type=PropertyTypeEnum.INCOME_TAX),
-        Property(cell_number=6, name="Rio Airport", property_type=PropertyTypeEnum.AIRPORT, country=CountryTypeEnum.BRAZIL, price=200, rent=25),
+        Property(cell_number=6, name="Rio Airport", property_type=PropertyTypeEnum.AIRPORT, price=200, rent=25),
 
         Property(cell_number=7, name="Amol", property_type=PropertyTypeEnum.LANDMARK, country=CountryTypeEnum.IRAN,
                  price=100, rent=6),

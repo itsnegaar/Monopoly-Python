@@ -18,9 +18,10 @@ class Player:
 
     def move_player(self, steps: int):
         self.position = (self.position + steps)
-        if self.position >= 40:
+        if self.position >= 38:
             self.balance += 200
-            self.position %= 40
+            self.position %= 38
+            time.sleep(0.8)
             print("Congrats! {} Got $200 for moving on the GO property.", self.name)
 
     def pay_rent(self, rent, owner):

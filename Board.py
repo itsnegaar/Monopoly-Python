@@ -1,23 +1,24 @@
-from Enums import PropertyTypeEnum
+from Enums import PropertyTypeEnum, CountryTypeEnum
 from Property import Property
 
 
 class Board:
+    jail_address = 11
     @staticmethod
     def return_board():
         board = [
             Property(cell_number=1, name="GO", property_type=PropertyTypeEnum.GO),
-            Property(cell_number=2, name="Old Kent Road", property_type=PropertyTypeEnum.LANDMARK, price=200, rent=8),
+            Property(cell_number=2, name="Rio", property_type=PropertyTypeEnum.LANDMARK, country=CountryTypeEnum.BRAZIL, price=200, rent=8),
             Property(cell_number=3, name="Community Chest", property_type=PropertyTypeEnum.CHEST, price=200, rent=8),
-            Property(cell_number=4, name="Whitechapel Road", property_type=PropertyTypeEnum.LANDMARK, price=200, rent=8),
+            Property(cell_number=4, name="Salvador", property_type=PropertyTypeEnum.LANDMARK, country=CountryTypeEnum.BRAZIL, price=200, rent=8),
 
             Property(cell_number=5, name="Income Tax", property_type=PropertyTypeEnum.INCOME_TAX),
             Property(cell_number=6, name="Kings Cross Station", property_type=PropertyTypeEnum.STATION, price=200, rent=8),
 
-            Property(cell_number=7, name="The Angel Islington", property_type=PropertyTypeEnum.LANDMARK, price=200, rent=8),
+            Property(cell_number=7, name="Amol", property_type=PropertyTypeEnum.LANDMARK, country=CountryTypeEnum.IRAN, price=200, rent=8),
             Property(cell_number=8, name="Community Chest", property_type=PropertyTypeEnum.CHEST, price=200, rent=8),
-            Property(cell_number=9, name="Euston Road", property_type=PropertyTypeEnum.LANDMARK),
-            Property(cell_number=10, name="Pentonville Road", property_type=PropertyTypeEnum.LANDMARK),
+            Property(cell_number=9, name="Tehran", property_type=PropertyTypeEnum.LANDMARK, country=CountryTypeEnum.IRAN, price=100, rent=6),
+            Property(cell_number=10, name="Qazvin", property_type=PropertyTypeEnum.LANDMARK, country=CountryTypeEnum.IRAN, price=120, rent=7),
             Property(cell_number=11, name="Jail / Just Visiting", property_type=PropertyTypeEnum.JAIL),
             Property(cell_number=12, name="Pall Mall", property_type=PropertyTypeEnum.LANDMARK, price=200, rent=8),
             Property(cell_number=13, name="Electric Company", property_type=PropertyTypeEnum.COMPANY, price=200, rent=8),
@@ -51,5 +52,6 @@ class Board:
             Property(cell_number=39, name="Super Tax", property_type=PropertyTypeEnum.LANDMARK, price=200, rent=8),
             Property(cell_number=40, name="Mayfair", property_type=PropertyTypeEnum.LANDMARK, price=200, rent=8),
         ]
-
         return board
+
+

@@ -8,7 +8,8 @@ class PropertyTypeEnum:
     COMPANY = "COMPANY"
     STATION = "STATION"
     LANDMARK = "LANDMARK"
-    GO_TO_PRISON = "GO_TO_PRISON"
+    GO_TO_JAIL = "GO_TO_JAIL"
+    JUST_VISITING = "JUST_VISITING"
 
 
 class PropertyColorEnum:

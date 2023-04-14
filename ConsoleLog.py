@@ -9,17 +9,9 @@ class ConsoleLog:
         print("\t \t ********************************** \t \t\n")
 
     @staticmethod
-    def get_player_name():
-        player_name = input("Please Enter Your Name: ")
-        return player_name
-
-    @staticmethod
     def print_rolling_dice(rolled_dice):
         print("Rolled The Dice: Dices=({},{})".format(rolled_dice[0], rolled_dice[1]))
 
-    @staticmethod
-    def print_moved_on_go():
-        print("Congrats! Got $200 for moving on the GO property.")
 
     @staticmethod
     def print_in_prison():
@@ -35,9 +27,6 @@ class ConsoleLog:
         print("You Landed on a Chest:\n",
               chest['message'])
 
-    @staticmethod
-    def print_tax_applied(tax_type: PropertyTypeEnum, tax_money):
-        print("Landed on {}. ${} was paid for tax.", tax_type, tax_money)
 
     @staticmethod
     def print_negative_balance(player):
@@ -51,12 +40,7 @@ class ConsoleLog:
     def print_property_not_found(property_name):
         print("Sorry! The property", property_name, "was not found.")
 
-    @staticmethod
-    def print_landed_on_jail(player):
-        print("Sorry! You're landed on jail...\n"
-              "Enter your choice:\n"
-              "1.Get out of jail for $50.\n"
-              "2.Stay in jail for 3 rounds.\n")
+
 
     @staticmethod
     def print_bot_turn():

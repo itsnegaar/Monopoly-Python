@@ -1,10 +1,10 @@
-from Enums import PropertyTypeEnum, PropertyColorEnum
+from Enums import PropertyTypeEnum, PropertyColorEnum, CountryTypeEnum
 from Player import Player
 
 
 class Property:
     def __init__(self, cell_number: int, name: str, property_type: PropertyTypeEnum, price: int = None,
-                 rent: int = None, property_color: PropertyColorEnum = None):
+                 rent: int = None, country: CountryTypeEnum = None):
         self.name = name
         self.cell_number = cell_number
         self.property_type = property_type
@@ -13,7 +13,7 @@ class Property:
         self.buildings_count = 0
         self.house_price = 0
         self.owner: (Player, None) = None
-        self.country: CountryTypeEnum
+        self.country = country
 
     def is_owned(self):
         if self.owner:
@@ -30,6 +30,7 @@ class Property:
     def destroy_building(self):
         if self.buildings_count > 0:
             self.buildings_count -= 1
+            self.rent /= 2
             return self.house_price / 2
         else:
             return -1

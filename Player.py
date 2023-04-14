@@ -1,6 +1,5 @@
 from Enums import PropertyTypeEnum
 from ConsoleLog import ConsoleLog
-from Property import Property
 
 
 class Player:
@@ -11,13 +10,14 @@ class Player:
         self.owned_property_list = []
         self.prison_time = 0
         self.doubled_dice_times = 0
+        self.is_visiting = False
 
     def move_player(self, steps: int):
         self.position = (self.position + steps)
         if self.position >= 40:
             self.balance += 200
             self.position %= 40
-            ConsoleLog.print_moved_on_go()
+            print("Congrats! {} Got $200 for moving on the GO property.", self.name)
 
     def pay_rent(self, rent, owner):
         if self.balance >= rent:
@@ -30,18 +30,22 @@ class Player:
     def apply_tax(self, tax_type):
         if tax_type == PropertyTypeEnum.INCOME_TAX:
             self.balance -= 200
-            ConsoleLog.print_tax_applied(tax_type=tax_type, tax_money=200)
+            print("{} Landed on {}. ${} was paid for tax.", self.name, tax_type, 200)
         elif tax_type == PropertyTypeEnum.SUPER_TAX:
             self.balance -= 100
-            ConsoleLog.print_tax_applied(tax_type=tax_type, tax_money=100)
+            print("{} Landed on {}. ${} was paid for tax.", self.name, tax_type, 100)
 
     def is_defeated(self):
-        for owned_property in self.owned_property_list:
-            pass
+        return self.balance < 0
 
+    def go_to_jail(self):
+        self.position = 11
     def handle_jail(self):
         if self.prison_time == 0:
-            ConsoleLog.print_landed_on_jail(self)
+            print("Sorry! You're landed on jail...\n"
+                  "Enter your choice:\n"
+                  "1.Get out of jail for $50.\n"
+                  "2.Stay in jail for 3 rounds unless you make a double.\n")
             while True:
                 input_choice = input()
                 if input_choice == '1' or input_choice == '2':
@@ -66,10 +70,12 @@ class Player:
         print("Congrats! You got out of prison after three failed attempts. Just visiting...")
         self.prison_time = 0
 
-    def buy_property(self, owned_property: Property):
-        if self.balance >= owned_property.price:
-            property.owner = self
-            self.balance -= owned_property.price
+    def buy_property(self, new_property):
+        if self.balance >= new_property.price:
+            new_property.owner = self
+            self.owned_property_list.append(new_property)
+            self.balance -= new_property.price
+            self.check_bought_a_country()
             return True
         else:
             print("Your balance is lower than the expected balance for this action!")
@@ -92,7 +98,10 @@ class Player:
             if input_choice == '0':
                 break
             elif input_choice == '1':
-                self.print_owned_properties()
+                if self.owned_property_list:
+                    self.print_owned_properties()
+                else:
+                    print("No properties yet...")
             else:
                 print("Wrong input. Try Again...")
         # while True:
@@ -126,8 +135,11 @@ class Player:
             self.doubled_dice_times = 0
             self.prison_time = 1
 
-    def land_on_property(self, landed_property: Property):
-        print("You landed on {}.".format(landed_property.name))
+    def just_visiting(self):
+        print("{} landed on {}".format(self.name, "JUST_VISITING"))
+
+    def land_on_property(self, landed_property):
+        print("{} landed on {}.".format(self.name, landed_property.name))
         if landed_property.owner:
             if landed_property.owner is not self:
                 print("Sorry, this property is owned by Agent. Paying rent...")
@@ -140,6 +152,7 @@ class Player:
                 input_choice = input()
                 if input_choice == '1':
                     self.buy_property(landed_property)
+                    break
                 elif input_choice == '2':
                     break
                 else:

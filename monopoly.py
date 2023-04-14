@@ -32,62 +32,73 @@ class Monopoly:
         self.player_1.add_balance(money=self.chest_list[chosen_chest]['money'])
 
     def start_game(self):
-        player_name = ConsoleLog.get_player_name()
+        player_name = input("Player 1: Please Enter Your Name: ")
         self.player_1 = Player(name=player_name)
+        player_name = input("Player 2: Please Enter Your Name: ")
+        self.player_2 = Player(name=player_name)
+
         ConsoleLog.print_go()
         player_turn = 1
 
         while True:
             ConsoleLog.print_line()
             if player_turn % 2:
-                # Are you in Prison?!
-                if self.player_1.prison_time > 0:
-                    ConsoleLog.print_in_prison()
-
-                    rolled_dice = self.roll_dice()
-                    ConsoleLog.print_rolling_dice(rolled_dice)
-
-                    if Utils.check_double_dice(dice=rolled_dice):
-                        self.player_1.prison_time = 0
-                        self.player_1.move_player(steps=rolled_dice[0] + rolled_dice[1])
-                    else:
-                        if self.player_1.prison_time >= 3:
-                            self.player_1.get_out_of_jail()
-                        else:
-                            self.player_1.prison_time += 1
-                # Guess not in prison
-                else:
-                    self.player_1.prison_time = 0
-                    rolled_dice = self.roll_dice()
-                    ConsoleLog.print_rolling_dice(rolled_dice)
-
-                    self.player_1.move_player(rolled_dice[0] + rolled_dice[1])
-
-                    current_position = self.player_1.position
-                    # todo: do the logic
-                    if self.board[self.player_1.position].property_type == PropertyTypeEnum.CHEST:
-                        self.choose_a_random_chest()
-                    elif self.board[self.player_1.position].property_type == PropertyTypeEnum.INCOME_TAX:
-                        self.player_1.apply_tax(tax_type=PropertyTypeEnum.INCOME_TAX)
-                    elif self.board[self.player_1.position].property_type == PropertyTypeEnum.SUPER_TAX:
-                        self.player_1.apply_tax(tax_type=PropertyTypeEnum.SUPER_TAX)
-                    elif self.board[self.player_1.position].property_type == PropertyTypeEnum.JAIL:
-                        self.player_1.handle_jail()
-                    elif self.board[self.player_1.position].property_type == PropertyTypeEnum.LANDMARK:
-                        self.player_1.land_on_property(self.board[self.player_1.position])
-                    elif self.board[self.player_1.position].property_type == PropertyTypeEnum.PARKING:
-                        self.land_on_parking
-
-                    if Utils.check_double_dice(rolled_dice):
-                        self.player_1.set_doubled_dice_times(self.player_1.doubled_dice_times + 1)
-                        self.player_1.check_doubled_dice_times()
-                        continue
-                    self.player_1.work_with_properties()
-                    self.player_1.check_positive_balance()
+                player_now = self.player_1
             else:
-                ConsoleLog.print_bot_turn()
+                player_now = self.player_2
+
+            print("It's {} Turn.\n".format(player_now.name))
+            # Are you in Prison?!
+            if self.player_1.prison_time > 0:
+                ConsoleLog.print_in_prison()
+
                 rolled_dice = self.roll_dice()
                 ConsoleLog.print_rolling_dice(rolled_dice)
-                # todo: bot
-                pass
+
+                if Utils.check_double_dice(dice=rolled_dice):
+                    player_now.prison_time = 0
+                    player_now.move_player(steps=rolled_dice[0] + rolled_dice[1])
+                else:
+                    if player_now.prison_time >= 3:
+                        player_now.get_out_of_jail()
+                    else:
+                        player_now.prison_time += 1
+            # Guess not in prison
+            else:
+                if not player_now.is_visiting:
+                    player_now.prison_time = 0
+                    rolled_dice = self.roll_dice()
+                    ConsoleLog.print_rolling_dice(rolled_dice)
+
+                    player_now.move_player(rolled_dice[0] + rolled_dice[1])
+
+                    current_position = player_now.position
+                    # todo: do the logic
+                    if self.board[player_now.position].property_type == PropertyTypeEnum.CHEST:
+                        self.choose_a_random_chest()
+                    elif self.board[player_now.position].property_type == PropertyTypeEnum.INCOME_TAX:
+                        player_now.apply_tax(tax_type=PropertyTypeEnum.INCOME_TAX)
+                    elif self.board[player_now.position].property_type == PropertyTypeEnum.SUPER_TAX:
+                        player_now.apply_tax(tax_type=PropertyTypeEnum.SUPER_TAX)
+                    elif self.board[player_now.position].property_type == PropertyTypeEnum.JAIL:
+                        player_now.handle_jail()
+                    elif self.board[player_now.position].property_type == PropertyTypeEnum.GO_TO_JAIL:
+                        player_now.go_to_jail()
+                    elif self.board[player_now.position].property_type == PropertyTypeEnum.JUST_VISITING:
+                        player_now.just_visiting()
+                    elif self.board[player_now.position].property_type == PropertyTypeEnum.LANDMARK:
+                        player_now.land_on_property(self.board[player_now.position])
+
+                    if Utils.check_double_dice(rolled_dice):
+                        player_now.set_doubled_dice_times(player_now.doubled_dice_times + 1)
+                        player_now.check_doubled_dice_times()
+                        continue
+                    else:
+                        player_now.set_doubled_dice_times(0)
+                else:
+                    player_now.set_doubled_dice_times(0)
+                    player_now.is_visiting = False
+                player_now.work_with_properties()
+                player_now.check_positive_balance()
+
             player_turn = (player_turn + 1) % 2

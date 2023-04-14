@@ -27,7 +27,7 @@ class Monopoly:
         return random.randint(1, 6), random.randint(1, 6)
 
     def choose_a_random_chest(self):
-        chosen_chest = random.randint(1, 6)
+        chosen_chest = random.randint(0, 5)
         ConsoleLog.print_chest_found(self.chest_list[chosen_chest])
         self.player_1.add_balance(money=self.chest_list[chosen_chest]['money'])
 
@@ -37,7 +37,7 @@ class Monopoly:
         player_name = input("Player 2: Please Enter Your Name: ")
         self.player_2 = Player(name=player_name)
 
-        ConsoleLog.print_go()
+        input("{}, Click <ENTER> to begin your go... ".format(self.player_1.name))
         player_turn = 1
 
         while True:
@@ -92,6 +92,9 @@ class Monopoly:
                     if Utils.check_double_dice(rolled_dice):
                         player_now.set_doubled_dice_times(player_now.doubled_dice_times + 1)
                         player_now.check_doubled_dice_times()
+                        print("You diced a double. Your turn again!")
+                        player_now.work_with_properties()
+                        player_now.check_positive_balance()
                         continue
                     else:
                         player_now.set_doubled_dice_times(0)

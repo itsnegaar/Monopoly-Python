@@ -32,7 +32,3 @@ class CountryTypeEnum:
     ENGLAND = "ENGLAND"
     GERMANY = "GERMANY"
     FRANCE = "FRANCE"
-#
-# class TaxTypeEnum:
-#     SUPER_TAX = "SUPER_TAX"
-#     INCOME_TAX = "INCOME_TAX"

@@ -1,5 +1,4 @@
 from Enums import PropertyTypeEnum, PropertyColorEnum, CountryTypeEnum
-from Player import Player
 
 
 class Property:
@@ -8,12 +7,14 @@ class Property:
         self.name = name
         self.cell_number = cell_number
         self.property_type = property_type
-        self.price = price
-        self.rent = rent
-        self.buildings_count = 0
-        self.house_price = 0
-        self.owner: (Player, None) = None
-        self.country = country
+        self.price: int = price
+        self.rent: int = rent
+        self.buildings_count: int = 0
+        self.house_price: int = 0
+        self.owner = None
+        self.country: CountryTypeEnum = country
+        self.is_upgradable: bool = False
+        self.is_mortgaged: bool = False
 
     def is_owned(self):
         if self.owner:
@@ -35,6 +36,8 @@ class Property:
         else:
             return -1
 
-    def __str__(self):
-        output = str(self.cell_number) + self.name + " ** number of buildings:" + str(
-            self.buildings_count) + " ** " + str(self.house_price)
+    def __repr__(self):
+        output = str(self.cell_number) + " | " + self.name + " | number of buildings:" + str(
+            self.buildings_count) + " | price: $" + str(self.price) + " | rent: $" + str(
+            self.rent) + " | country:" + str(self.country)
+        return output

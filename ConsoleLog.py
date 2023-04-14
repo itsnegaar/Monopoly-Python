@@ -1,12 +1,14 @@
 from typing import Dict
-
+import time
 from Enums import PropertyTypeEnum
 
 
 class ConsoleLog:
     @staticmethod
     def print_line():
+        time.sleep(1)
         print("\t \t ********************************** \t \t\n")
+        time.sleep(1)
 
     @staticmethod
     def print_rolling_dice(rolled_dice):
@@ -17,10 +19,6 @@ class ConsoleLog:
     def print_in_prison():
         print("Sorry! You're still in prison...")
 
-
-    @staticmethod
-    def print_go():
-        input("Click <ENTER> to begin your go... ")
 
     @staticmethod
     def print_chest_found(chest: Dict):

@@ -1,3 +1,6 @@
+import time
+
+from Board import Board
 from Enums import PropertyTypeEnum
 from ConsoleLog import ConsoleLog
 
@@ -30,16 +33,17 @@ class Player:
     def apply_tax(self, tax_type):
         if tax_type == PropertyTypeEnum.INCOME_TAX:
             self.balance -= 200
-            print("{} Landed on {}. ${} was paid for tax.", self.name, tax_type, 200)
+            print("{} Landed on {}. ${} was paid for tax.".format(self.name, tax_type, 200))
         elif tax_type == PropertyTypeEnum.SUPER_TAX:
             self.balance -= 100
-            print("{} Landed on {}. ${} was paid for tax.", self.name, tax_type, 100)
+            print("{} Landed on {}. ${} was paid for tax.".format(self.name, tax_type, 100))
 
     def is_defeated(self):
         return self.balance < 0
 
     def go_to_jail(self):
         self.position = 11
+
     def handle_jail(self):
         if self.prison_time == 0:
             print("Sorry! You're landed on jail...\n"
@@ -48,13 +52,14 @@ class Player:
                   "2.Stay in jail for 3 rounds unless you make a double.\n")
             while True:
                 input_choice = input()
-                if input_choice == '1' or input_choice == '2':
+                if input_choice == '1':
+                    self.get_out_of_jail_for_money()
+                    break
+                if input_choice == '2':
+                    print("Staying in jail...")
                     break
                 else:
                     print("Wrong Input. Try Again:")
-                    continue
-            if input_choice == '1':
-                self.get_out_of_jail_for_money()
         elif self.prison_time <= 2:
             print("Sorry! You're still in jail for more {} rounds.\n", 3 - self.prison_time)
             self.prison_time += 1
@@ -75,11 +80,26 @@ class Player:
             new_property.owner = self
             self.owned_property_list.append(new_property)
             self.balance -= new_property.price
-            self.check_bought_a_country()
+            self.check_bought_a_country(new_property.country)
             return True
         else:
             print("Your balance is lower than the expected balance for this action!")
             return False
+
+    def check_bought_a_country(self, new_country) -> bool:
+        owned_properties_of_the_country = 0
+        for _property in self.owned_property_list:
+            if _property.country == new_country:
+                owned_properties_of_the_country += 1
+
+        number_of_cities_in_a_country = Board.number_of_cities_in_a_country(new_country)
+
+        if number_of_cities_in_a_country == owned_properties_of_the_country:
+            print("Congrats {}. You bought {}."
+                  " You can now upgrade cities of this country.".format(self.name, new_country))
+            Board.upgrade_cities_to_upgradable(new_country)
+            return True
+        return False
 
     def add_balance(self, money: int):
         self.balance += money
@@ -92,7 +112,7 @@ class Player:
             self.handle_negative_balance()
 
     def work_with_properties(self):
-        print("You're Balance is {}.\n", self.balance)
+        print("You're Balance is {}.\n".format(self.balance))
         while True:
             input_choice = input("Enter 1 to check properties or 0 to pass: ")
             if input_choice == '0':
@@ -100,14 +120,55 @@ class Player:
             elif input_choice == '1':
                 if self.owned_property_list:
                     self.print_owned_properties()
+
+                    while True:
+                        property_chosen = input("Enter a property number to select: or 0 to pass")
+                        if property_chosen == '0':
+                            break
+                        else:
+                            try:
+                                self.work_with_a_property(int(property_chosen))
+                            except Exception as e:
+                                print("Input Error!")
+
                 else:
                     print("No properties yet...")
             else:
                 print("Wrong input. Try Again...")
-        # while True:
-        #     property_choice = input("Choose a property number to downgrade, sell, or mortgage: ")
-        #     # todo: more
-        #     print("Ch")
+
+    def work_with_a_property(self, property_index: int):
+        working_property = None
+        for _property in self.owned_property_list:
+            if _property.cell_number == property_index:
+                working_property = _property
+                break
+        if not working_property:
+            raise Exception("Not found")
+
+        options = ["0.Exit", "3.Mortgage"]
+        options_numbers = ["0", "3"]
+        if working_property.is_upgradable:
+            options.append("1.Upgrade")
+            options_numbers.append("1")
+        if working_property.buildings_count > 0:
+            options.append("2.Downgrade")
+            options_numbers.append("2")
+        else:
+            options.append("4.Sell")
+        print("Selected Property:\n" + working_property)
+        print("Choose an Option:\n")
+        for option in options:
+            print(option)
+        while True:
+            action = input()
+            if action == '0':
+                print("Exiting...\n")
+                time.sleep(1)
+            elif action not in options_numbers:
+                print("Wrong Input! Try again.")
+            else:
+                pass
+                # todo: options!
 
     def print_owned_properties(self):
         for owned_property in self.owned_property_list:
@@ -142,10 +203,17 @@ class Player:
         print("{} landed on {}.".format(self.name, landed_property.name))
         if landed_property.owner:
             if landed_property.owner is not self:
-                print("Sorry, this property is owned by Agent. Paying rent...")
+                print("Sorry, this property is owned by Agent.")
+                if landed_property.is_mortgaged:
+                    print("No Rent needed!")
+                else:
+                    print("Paying rent...")
                 self.pay_rent(rent=landed_property.rent, owner=landed_property.owner)
+            else:
+                print("This property is yours.")
         else:
-            print("This property doesn't belong to anybody. Choose action:\n"
+            print("This property doesn't belong to anybody.\n" + str(landed_property) +
+                  "\nChoose action:\n"
                   "1. Buy the property...\n"
                   "2. Go to next action...")
             while True:
@@ -157,5 +225,5 @@ class Player:
                     break
                 else:
                     print("Wrong output. Try Again: \n"
-                          "1. Buy the property..."
+                          "1. Buy the property...\n"
                           "2. Go to next action...")

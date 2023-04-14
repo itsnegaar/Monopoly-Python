@@ -78,4 +78,10 @@ class Board:
             if _property.country == given_country:
                 _property.is_upgradable = True
 
+    @classmethod
+    def change_cities_to_not_upgradable(cls, given_country):
+        for _property in cls.board:
+            if _property.country == given_country:
+                _property.is_upgradable = False
+
 

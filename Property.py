@@ -10,7 +10,7 @@ class Property:
         self.price: int = price
         self.rent: int = rent
         self.buildings_count: int = 0
-        self.house_price: int = 0
+        self.house_price: int = price
         self.owner = None
         self.country: CountryTypeEnum = country
         self.is_upgradable: bool = False
@@ -36,11 +36,21 @@ class Property:
         else:
             return -1
 
-    def upgrade_buildings(self):
-        pass
+    def upgrade(self):
+        self.rent *= 2
+        self.price += self.price / 2
+        self.buildings_count += 1
 
-    def mortgage_building(self):
-        pass
+    def downgrade(self):
+        self.rent /= 2
+        self.price -= self.price // 3
+        self.buildings_count -= 1
+
+    def sell(self):
+        self.owner = None
+
+    # def mortgage_building(self):
+    #     pass
 
     def __repr__(self):
         output = str(self.cell_number) + " | " + self.name + " | number of buildings:" + str(

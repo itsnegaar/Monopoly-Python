@@ -3,6 +3,7 @@ import time
 from Board import Board
 from Enums import PropertyTypeEnum
 from ConsoleLog import ConsoleLog
+from Property import Property
 
 
 class Player:
@@ -80,7 +81,9 @@ class Player:
             new_property.owner = self
             self.owned_property_list.append(new_property)
             self.balance -= new_property.price
-            self.check_bought_a_country(new_property.country)
+            if new_property.property_type != PropertyTypeEnum.AIRPORT:
+                self.check_bought_a_country(new_property.country)
+            print("Bought {} for ${}.".format(new_property.name, new_property.price))
             return True
         else:
             print("Your balance is lower than the expected balance for this action!")
@@ -145,36 +148,93 @@ class Player:
         if not working_property:
             raise Exception("Not found")
 
-        options = ["0.Exit", "3.Mortgage"]
-        options_numbers = ["0", "3"]
+        options = ["0.Exit"]
+        options_numbers = ["0"]
         if working_property.is_upgradable:
             options.append("1.Upgrade")
             options_numbers.append("1")
         if working_property.buildings_count > 0:
             options.append("2.Downgrade")
             options_numbers.append("2")
-        else:
-            options.append("4.Sell")
+        elif working_property.is_upgradable:
+            flag = True
+            for _property in self.owned_property_list:
+                if _property.country == working_property.country:
+                    if _property.buildings_count > 0:
+                        # print("You can't sell a property with more than 1 building in other cities of same country!")
+                        flag = False
+            if flag:
+                options.append("4.Sell")
+                options_numbers.append("4")
+
+            # options.append("3.Mortgage")
+            # options_numbers.append("3")
         print("Selected Property:\n" + working_property)
-        print("Choose an Option:\n")
+        print("Options: \n")
         for option in options:
             print(option)
         while True:
-            action = input()
+            action = input("Choose option: ")
             if action == '0':
                 print("Exiting...\n")
                 time.sleep(1)
             elif action not in options_numbers:
                 print("Wrong Input! Try again.")
+                continue
             else:
-                pass
-                # todo: options!
+                if action == '1':
+                    self.upgrade_property(working_property)
+                elif action == '2':
+                    self.downgrade_property(working_property)
+                # if action == '3':
+                #     self.mortgage_property(working_property)
+                elif action == '4':
+                    self.sell_property(working_property)
+
+    def upgrade_property(self, input_property: Property):
+        if self.balance > input_property.price / 2:
+            if input_property.buildings_count > 3:
+                print("You can't upgrade a property with more than 3 buildings!")
+                return False
+            else:
+                upgrade_cost = input_property.price / 2
+                self.balance -= upgrade_cost
+                input_property.upgrade()
+                print("Upgraded {} for ${}.".format(input_property.name, upgrade_cost))
+                return True
+        else:
+            print("Your balance is lower than the expected balance for this action!")
+            return False
+
+    def downgrade_property(self, input_property: Property):
+        if input_property.buildings_count <= 0:
+            print("You can't downgrade a property with less than 1 building!")
+            return False
+        else:
+            downgrade_price = (input_property.price // 3) / 2
+            self.balance += downgrade_price
+            input_property.downgrade()
+            print("Downgraded {} for ${}.".format(input_property.name, downgrade_price))
+            return True
+
+    def sell_property(self, input_property: Property):
+        if input_property.buildings_count <= 0:
+            print("You can't sell a property with less than 1 building!")
+            return False
+        else:
+            sell_price = input_property.price
+            self.balance += sell_price
+            input_property.sell()
+            self.owned_property_list.remove(input_property)
+            print("Sold {} for ${}.".format(input_property.name, sell_price))
+            Board.change_cities_to_not_upgradable(input_property.country)
 
     def print_owned_properties(self):
         for owned_property in self.owned_property_list:
             print(owned_property)
 
     def handle_negative_balance(self):
+        # todo: change!
         while self.balance < 0:
             print("Select a property to sell, downgrade or mortgage")
             i = 0
@@ -220,6 +280,35 @@ class Player:
                 input_choice = input()
                 if input_choice == '1':
                     self.buy_property(landed_property)
+                    break
+                elif input_choice == '2':
+                    break
+                else:
+                    print("Wrong output. Try Again: \n"
+                          "1. Buy the property...\n"
+                          "2. Go to next action...")
+
+    def land_on_airport(self, landed_airport):
+        print("{} landed on {}.".format(self.name, landed_airport.name))
+        if landed_airport.owner:
+            if landed_airport.owner is not self:
+                print("Sorry, this property is owned by Agent.")
+                if landed_airport.is_mortgaged:
+                    print("No Rent needed!")
+                else:
+                    print("Paying rent...")
+                self.pay_rent(rent=landed_airport.rent, owner=landed_airport.owner)
+            else:
+                print("This property is yours.")
+        else:
+            print("This property doesn't belong to anybody.\n" + str(landed_airport) +
+                  "\nChoose action:\n"
+                  "1. Buy the property...\n"
+                  "2. Go to next action...")
+            while True:
+                input_choice = input()
+                if input_choice == '1':
+                    self.buy_property(landed_airport)
                     break
                 elif input_choice == '2':
                     break

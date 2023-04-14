@@ -90,7 +90,7 @@ class Monopoly:
                     elif self.board[player_now.position].property_type == PropertyTypeEnum.LANDMARK:
                         player_now.land_on_property(self.board[player_now.position])
                     elif self.board[player_now.position].property_type == PropertyTypeEnum.AIRPORT:
-                        pass
+                        player_now.land_on_airport(self.board[player_now.position])
 
                     if Utils.check_double_dice(rolled_dice):
                         player_now.set_doubled_dice_times(player_now.doubled_dice_times + 1)

@@ -1,19 +1,21 @@
 import random
 import time
-
+from Player import *
 import Utils
 from Enums import PropertyTypeEnum
 from Board import Board
 from ConsoleLog import ConsoleLog
 from Player import Player
-
+from copy import deepcopy
+from math import ceil
 
 class Monopoly:
     def __init__(self):
         self.board = Board.return_board()
         self.player_1: Player = None
         self.player_2 = "AI"
-
+        self.players = [self.player_1, self.player_2]
+        self.curr_player = None
         self.chest_list = [
             {'money': 100, 'message': "Your friend owed you money, now he pays you back!"},
             {'money': -100, 'message': "Your sister wants a new ipad, she needs a $100!"},
@@ -51,8 +53,10 @@ class Monopoly:
             ConsoleLog.print_line()
             if player_turn % 2:
                 player_now = self.player_1
+                self.curr_player = 0
             else:
                 player_now = self.player_2
+                self.curr_player = 1
 
             print("It's {} Turn.\n".format(player_now.name))
             time.sleep(0.5)
@@ -115,3 +119,65 @@ class Monopoly:
                 player_now.check_positive_balance()
 
             player_turn = (player_turn + 1) % 2
+    
+    def take_action(self, action: int):
+        # Updating the game state based on the action taken by the current player
+        new_players = deepcopy(self.players)
+        new_board = deepcopy(self.board)
+        curr_player = new_players[self.curr_player]
+        curr_position = curr_player.position 
+        curr_prop = new_board[curr_position]
+        # Do the appropriate changes for the action
+        if action == 0:
+            pass
+        elif action == 1:
+            curr_player.pay(curr_prop.price)
+            curr_player.properties.append(curr_position)
+            curr_prop.owner = self.current_player    
+        elif action == 2:
+            curr_player.pay(curr_prop.rent)
+            new_players[curr_prop.owner].receive(curr_prop.rent)
+        elif action == 3:
+            curr_prop.rent *= 1.5
+            curr_prop.rent = ceil(curr_prop.rent)
+            curr_prop.level += 1
+        elif action == 4:
+            curr_player.position = 10
+            curr_player.in_jail = True
+            curr_player.turns_in_jail += 1
+        elif action == 5:
+            curr_player.turns_in_jail += 1
+        elif action == 6:
+            curr_player.pay(50)
+            curr_player.in_jail = False
+            curr_player.turns_in_jail = 0
+        elif action == 7:
+            curr_player.in_jail = False
+            curr_player.turns_in_jail = 0       
+        return Monopoly(new_board, new_players, self.current_player, self.game_over)
+    
+    def get_possible_actions(self) -> list:
+        # Get the possible actions available to the current player
+        curr_player = self.players
+        curr_position = curr_player.position
+        curr_prop = self.board[curr_position]
+        if curr_player.in_jail:
+            if curr_player.rolled_doubles:
+                return [7]
+            if curr_player.turns_in_jail >= 3:
+                return [6]
+            return [5, 6]
+        if curr_prop.ownable:
+            if curr_prop.owner == self.current_player:
+                if curr_prop.level < 5:
+                    return [3, 0]
+                return [0]
+            elif curr_prop.owner == None:
+                if curr_player.money > curr_prop.price:
+                    return [1, 0]
+                return [0]
+            else:
+                return [2]
+        if curr_prop.space == "GoToJail":
+                return [4]
+        return [0]

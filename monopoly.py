@@ -21,6 +21,12 @@ class Monopoly:
             {'money': -200, 'message': "Oops! You lost $200. It maybe fell off your pocket."},
             {'money': 500,
              'message': "You won the national hot dog eating contest and won $500! Hope that'll cover your toilet repairs..."},
+            {'money': -50, 'message': "Your phone died. pay $50 to repair it!"},
+            {'money': -50, 'message': "Doctor's fee. Pay $50"},
+            {'money': 100, 'message': "Holiday fund matures. Receive $100"},
+            {'money': 100, 'message': "Life insurance matures. Collect $100"},
+            {'money':  25, 'message': "Receive $25 consultancy fee"},
+            {'money': 100, 'message': "You inherit $100."},
         ]
 
     def roll_dice(self):

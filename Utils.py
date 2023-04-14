@@ -3,3 +3,4 @@ def check_double_dice(dice):
         return True
     else:
         return False
+

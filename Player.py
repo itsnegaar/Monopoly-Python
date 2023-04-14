@@ -18,9 +18,9 @@ class Player:
 
     def move_player(self, steps: int):
         self.position = (self.position + steps)
-        if self.position >= 38:
+        if self.position >= 37:
             self.balance += 200
-            self.position %= 38
+            self.position %= 37
             time.sleep(0.8)
             print("Congrats! {} Got $200 for moving on the GO property.", self.name)
 
@@ -44,7 +44,7 @@ class Player:
         return self.balance < 0
 
     def go_to_jail(self):
-        self.position = 11
+        self.position = 10
 
     def handle_jail(self):
         if self.prison_time == 0:
